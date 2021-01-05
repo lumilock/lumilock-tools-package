@@ -1,0 +1,30 @@
+{
+    "name": "lumilock/lumilock-tools-package",
+    "description": "A package to create an admin panel API.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Perrin Thibaud",
+            "email": "thibaud.perrin@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "lumilock\\lumilockToolsPackage\\": "/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "lumilock\\lumilockToolsPackage\\Providers\\LumilockToolsPackageServiceProvider"
+            ],
+            "aliases": {
+                "lumilockToolsPackage": "lumilock\\lumilockToolsPackage\\Facades\\lumilockToolsPackage"
+            }
+        }
+    }
+}
