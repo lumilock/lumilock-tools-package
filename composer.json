@@ -11,6 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "illuminate/session": "^8.21"
     },
     "autoload": {
         "psr-4": {

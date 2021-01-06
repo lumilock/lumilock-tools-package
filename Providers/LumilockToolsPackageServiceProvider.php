@@ -27,21 +27,21 @@ class LumilockToolsPackageServiceProvider extends ServiceProvider
    {
 
 
-      // $configPath = __DIR__ . '/../config/auth.php';
-      // $this->mergeConfigFrom($configPath, 'auth');
+      $configPath = __DIR__ . '/../config/auth.php';
+      $this->mergeConfigFrom($configPath, 'auth');
 
       //Register Our Package routes
       include __DIR__ . '/../Routes/web.php';
 
-      // $baseConfigPath = base_path() . '/config';
-      // if (!file_exists($baseConfigPath)) {
-      //    mkdir($baseConfigPath, 0777, true);
-      // }
-      // if (!file_exists($baseConfigPath . '/auth.php')) {
-      //    // Will copy package/auth.php to project/auth.php
-      //    // overwritting it if necessary
-      //    copy($configPath, $baseConfigPath . '/auth.php');
-      // }
+      $baseConfigPath = base_path() . '/config';
+      if (!file_exists($baseConfigPath)) {
+         mkdir($baseConfigPath, 0777, true);
+      }
+      if (!file_exists($baseConfigPath . '/auth.php')) {
+         // Will copy package/auth.php to project/auth.php
+         // overwritting it if necessary
+         copy($configPath, $baseConfigPath . '/auth.php');
+      }
    }
 
    /**

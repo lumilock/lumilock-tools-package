@@ -6,24 +6,42 @@
 ## 📚 Installation
 
 Make some changes inside `bootstrap/app.php`.
-```php
-//After
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-```
 
 ```php
  // Add these lines
-$app->register(lumilock\lumilockToolsPackage\Providers\LumilockToolsPackageServiceProvider::class);
-```
+$app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
+    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
+});
 
-Add AuthenticateAccessMiddleware Middleware to `bootstrap/app.php`.
+$app->singleton('session.store', function () use ($app) {
+    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session.store');
+});
+```
 ```php
-  $app->middleware([
+ // Add these lines
+$app->middleware([
     \lumilock\lumilockToolsPackage\App\Http\Middleware\AuthenticateAccessMiddleware::class
 ]);
+
+$app->middleware([
+    \lumilock\lumilockToolsPackage\App\Http\Middleware\Authenticate::class
+]);
+
+$app->middleware([
+    \Illuminate\Session\Middleware\StartSession::class,
+]);
 ```
+```php
+ // Add these lines
+$app->register(lumilock\lumilockToolsPackage\Providers\LumilockToolsPackageServiceProvider::class);
+$app->register(lumilock\lumilockToolsPackage\Providers\AuthServiceProvider::class);
+```
+
+create the storage session directory : 
+```shell
+mkdir -p storage/framework/sessions
+```
+
 Now for your Lumilock service app, inside the lumen .env file you can add the varible `ACCEPTED_SECRETS=` in order to create a secret key to protect your service. This secret_key need to be given to the lumilock_gateway.
 
 ## 📰 Change log
