@@ -1,12 +1,13 @@
 <?php
 
-namespace lumilock\lumilockToolsPackage\Providers;
+namespace lumilock\lumilockToolsPackage\App\Providers;
 
 use Closure;
 use lumilock\lumilockToolsPackage\App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use lumilock\lumilockToolsPackage\Providers\CustomUserProvider;
+use lumilock\lumilockToolsPackage\App\Auth\CheckTokenGuard;
+use lumilock\lumilockToolsPackage\App\Auth\CustomUserProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -28,10 +29,11 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->extend('GuardToken', function () {
             echo "- register GuardToken \n";
-            $provider = $this->app['auth']->createUserProvider($this->app['config']['auth.guards.web']['provider']);
+            $provider = $this->app['auth']->createUserProvider($this->app['config']['auth.guards.api']['provider']);
             $guard = new CheckTokenGuard($provider, $this->app['session.store']);
             return $guard;
         });
+        
     }
 
     /**

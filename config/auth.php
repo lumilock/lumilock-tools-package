@@ -8,7 +8,7 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'token',
+            'driver' => 'GuardToken',
             'provider' => 'users',
         ],
     ],
