@@ -16,6 +16,8 @@ class User extends Model implements AuthenticatableContract
     use Authenticatable, Authorizable;
     use Traits\UsesUuid;
 
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,10 +28,15 @@ class User extends Model implements AuthenticatableContract
         'first_name',
         'last_name',
         'email',
+        'picture',
         'active',
-        'token',
-        'expires_in',
-        'token_type'
+        'tokens',
+        'roles'
+    ];
+
+    protected $casts = [
+        'tokens' => 'array',
+        'roles' => 'array'
     ];
 
     // no updated_at, created_at
@@ -52,30 +59,4 @@ class User extends Model implements AuthenticatableContract
     {
         return $this->{$this->getAuthIdentifierName()};
     }
-
-    // public function getCustomDataAttribute($value)
-    // {
-    //     /**
-    //      * First check if the custom_data exists in jwt payload
-    //      * If not found, only because the jwt is going to be
-    //      * generated next. Otherwise, it'll always be there.
-    //      * And attacker cannot modify
-    //      */
-    //     try {
-    //         return auth()->payload()->get('custom_data');
-    //     } catch (Throwable $t) {
-    //         // When generating the payload
-    //         return $value;
-    //     }
-    // }
-
-    // public function getJWTIdentifier()
-    // {
-    //     return $this->getKey();
-    // }
-
-    // public function getJWTCustomClaims()
-    // {
-    //     return [];
-    // }
 }

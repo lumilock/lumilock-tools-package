@@ -5,6 +5,8 @@ namespace lumilock\lumilockToolsPackage\App\Http\Middleware;
 use Closure;
 use Exception;
 use Illuminate\Contracts\Auth\Factory as Auth;
+// use Illuminate\Contracts\Auth\Guard as Guard;
+// use Illuminate\Support\Facades\Auth;
 
 class Authenticate
 {
@@ -38,13 +40,11 @@ class Authenticate
     {
         echo "- handle \n";
         $credentials['api_token'] = $request->header('Authorization');
+        // dd(Auth::guard($guard)->attempt($credentials, false)->first_name);
         if ($user = $this->auth->guard($guard)->attempt($credentials, false)) {
-            // if ($this->auth->guard($guard)->guest()) {
-            // dd($this->auth->user());
             if ($user && isset($user->Error))
                 return response('Unauthorized.', 401);
             return $next($request, $guard);
-            // return $this->sendLoginResponse($request, $guard);
         }
         return response('Unauthorized.', 401);
     }

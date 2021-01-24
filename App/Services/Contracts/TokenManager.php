@@ -39,6 +39,7 @@ class TokenManager
 
         if (isset($this->token)) {
             $headers['Authorization'] = $this->token;
+            $headers['Authorization_sso_secret'] = env('SSO_SECRET');
         }
         $client = new Client([
             'base_uri' =>  $this->checkUrl,

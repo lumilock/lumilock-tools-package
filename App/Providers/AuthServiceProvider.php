@@ -3,11 +3,13 @@
 namespace lumilock\lumilockToolsPackage\App\Providers;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use lumilock\lumilockToolsPackage\App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use lumilock\lumilockToolsPackage\App\Auth\CheckTokenGuard;
 use lumilock\lumilockToolsPackage\App\Auth\CustomUserProvider;
+// use Illuminate\auth\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -19,7 +21,27 @@ class AuthServiceProvider extends ServiceProvider
     public function register()
     {
         echo "- register \n";
-        $this->app['auth']->provider(
+        // $this->app['auth']->provider(
+        //     'auth-provider',
+        //     function ($app, array $config) {
+        //         echo "- register auth-provider \n";
+        //         return new CustomUserProvider($app['hash'], $config['model'], $app['session.store']);
+        //     }
+        // );
+
+        // $this->app['auth']->extend('GuardToken', function () {
+        //     echo "- register GuardToken \n";
+        //     $provider = $this->app['auth']->createUserProvider($this->app['config']['auth.guards.api']['provider']);
+        //     $guard = new CheckTokenGuard($provider, $this->app['session.store']);
+        //     return $guard;
+        // });
+
+
+        $this->app->bind('lumilock\lumilockToolsPackage\App\Models\Auth\User', function ($app) {
+            return new User($app->make());
+        });
+
+        Auth::provider(
             'auth-provider',
             function ($app, array $config) {
                 echo "- register auth-provider \n";
@@ -27,13 +49,12 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app['auth']->extend('GuardToken', function () {
+        Auth::extend('GuardToken', function ($app) {
             echo "- register GuardToken \n";
-            $provider = $this->app['auth']->createUserProvider($this->app['config']['auth.guards.api']['provider']);
+            $provider = Auth::createUserProvider($this->app['config']['auth.guards.api']['provider']);
             $guard = new CheckTokenGuard($provider, $this->app['session.store']);
             return $guard;
         });
-        
     }
 
     /**
@@ -48,7 +69,7 @@ class AuthServiceProvider extends ServiceProvider
         // application. The callback which receives the incoming request instance
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
-        $this->app['auth']->viaRequest('api', function ($request) {
+        Auth::viaRequest('api', function ($request) {
             echo "- boot api \n";
             if ($request->input('api_token')) {
                 return User::where('api_token', $request->input('api_token'))->first();

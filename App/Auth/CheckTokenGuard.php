@@ -80,7 +80,7 @@ class CheckTokenGuard implements Guard
     public function getJsonParams()
     {
         dd('getJsonParams');
-        $jsondata = $this->request->get('users'); /////////////////////////////////////////
+        $jsondata = $this->request->get('user_' . $this->user()->id);
 
         return (!empty($jsondata) ? json_decode($jsondata, TRUE) : NULL);
     }
@@ -92,7 +92,6 @@ class CheckTokenGuard implements Guard
      */
     public function id()
     {
-        dd('id');
         if ($user = $this->user()) {
             return $this->user()->getAuthIdentifier();
         }
@@ -131,9 +130,12 @@ class CheckTokenGuard implements Guard
      */
     public function setUser(Authenticatable $user)
     {
-        dd('setUser');
         $this->user = $user;
         return $this;
+    }
+
+    public function login($user, $remember) {
+        $this->setUser($user);
     }
 
     public function attempt(array $credentials = [], $remember = false, $login = true)
@@ -145,16 +147,18 @@ class CheckTokenGuard implements Guard
             }
         }
         $this->lastAttempted = $user = $this->provider->checkByToken($credentials['api_token']);
-        if ($user && isset($user->token))
+        dd('user : ', $user);
+
+        if ($user && isset($user->Error))
             return $user;
-        if (!$user) {
+        if (!$user || $user === 'Unauthorized') {
             // $this->fireFailedEvent($user, $credentials);
             return false;
         }
-        // if ($login) {
-        //     $this->login($user, $remember);
-        //     return $this->user;
-        // }
+        if ($login) {
+            $this->login($user, $remember);
+            return $this->user;
+        }
         // if ($login) {
         //     $this->fireFailedEvent($user, $credentials);
         // }
