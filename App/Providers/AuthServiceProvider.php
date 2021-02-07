@@ -72,7 +72,7 @@ class AuthServiceProvider extends ServiceProvider
         Auth::viaRequest('api', function ($request) {
             echo "- boot api \n";
             if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
+                return User::where('api_token', $request->input('api_token'))->first(); // TODO if think that this function does not work
             }
         });
     }

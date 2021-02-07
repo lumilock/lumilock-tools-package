@@ -56,6 +56,5 @@ class TokenManager
             }
         );
         return $promise1->wait();
-
     }
 }

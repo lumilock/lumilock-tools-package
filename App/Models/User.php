@@ -45,6 +45,7 @@ class User extends Model implements AuthenticatableContract
     /**
      * {@inheritDoc}
      * @see \Illuminate\Contracts\Auth\Authenticatable::getAuthIdentifierName()
+     * TODO check if we need to use id instead of first_name
      */
     public function getAuthIdentifierName()
     {
@@ -59,4 +60,11 @@ class User extends Model implements AuthenticatableContract
     {
         return $this->{$this->getAuthIdentifierName()};
     }
+
+    public function getAuthToken() {
+        return 'tokens';
+    }
+    // public function getRememberToken();
+    // public function setRememberToken($value);
+    // public function getRememberTokenName();
 }

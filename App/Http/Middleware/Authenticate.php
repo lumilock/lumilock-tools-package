@@ -40,7 +40,6 @@ class Authenticate
     {
         echo "- handle \n";
         $credentials['api_token'] = $request->header('Authorization');
-        // dd(Auth::guard($guard)->attempt($credentials, false)->first_name);
         if ($user = $this->auth->guard($guard)->attempt($credentials, false)) {
             if ($user && isset($user->Error))
                 return response('Unauthorized.', 401);

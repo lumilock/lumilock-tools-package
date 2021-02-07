@@ -34,7 +34,7 @@ class CheckTokenGuard implements Guard
      */
     public function __construct(CustomUserProvider $provider, Store $request)
     {
-        $this->request = $request;
+        $this->request = $request; // TODO remove session request if not needed
         $this->provider = $provider;
         $this->user = NULL;
     }
@@ -80,7 +80,7 @@ class CheckTokenGuard implements Guard
     public function getJsonParams()
     {
         dd('getJsonParams');
-        $jsondata = $this->request->get('user_' . $this->user()->id);
+        $jsondata = $this->request->get('user_' . $this->user()->id); // TODO we do not have session anymore
 
         return (!empty($jsondata) ? json_decode($jsondata, TRUE) : NULL);
     }
@@ -93,12 +93,13 @@ class CheckTokenGuard implements Guard
     public function id()
     {
         if ($user = $this->user()) {
-            return $this->user()->getAuthIdentifier();
+            return $this->user()->getAuthIdentifier(); // TODO check what is AuthIdentifier
         }
     }
 
     /**
      * Validate a user's credentials.
+     * TODO refactor this function
      *
      * @return bool
      */
@@ -134,10 +135,15 @@ class CheckTokenGuard implements Guard
         return $this;
     }
 
+    /**
+     * TODO add remember
+     */
     public function login($user, $remember) {
         $this->setUser($user);
     }
 
+    /**
+     */
     public function attempt(array $credentials = [], $remember = false, $login = true)
     {
         // $this->fireAttemptEvent($credentials, $remember, $login);
@@ -147,21 +153,19 @@ class CheckTokenGuard implements Guard
             }
         }
         $this->lastAttempted = $user = $this->provider->checkByToken($credentials['api_token']);
-        dd('user : ', $user);
 
+        // if there is an user and an error we return the content of the user error 
         if ($user && isset($user->Error))
             return $user;
+        // checking if we have the 'Unauthorized' error
         if (!$user || $user === 'Unauthorized') {
-            // $this->fireFailedEvent($user, $credentials);
             return false;
         }
+        // login of the user
         if ($login) {
             $this->login($user, $remember);
             return $this->user;
         }
-        // if ($login) {
-        //     $this->fireFailedEvent($user, $credentials);
-        // }
         return false;
     }
 }
