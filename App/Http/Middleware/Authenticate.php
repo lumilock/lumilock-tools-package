@@ -38,7 +38,6 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        echo "- handle \n";
         $credentials['api_token'] = $request->header('Authorization');
         if ($user = $this->auth->guard($guard)->attempt($credentials, false)) {
             if ($user && isset($user->Error))

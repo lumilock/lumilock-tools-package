@@ -20,7 +20,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        echo "- register \n";
         // $this->app['auth']->provider(
         //     'auth-provider',
         //     function ($app, array $config) {
@@ -44,13 +43,11 @@ class AuthServiceProvider extends ServiceProvider
         Auth::provider(
             'auth-provider',
             function ($app, array $config) {
-                echo "- register auth-provider \n";
                 return new CustomUserProvider($app['hash'], $config['model'], $app['session.store']);
             }
         );
 
         Auth::extend('GuardToken', function ($app) {
-            echo "- register GuardToken \n";
             $provider = Auth::createUserProvider($this->app['config']['auth.guards.api']['provider']);
             $guard = new CheckTokenGuard($provider, $this->app['session.store']);
             return $guard;
@@ -64,13 +61,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        echo "- boot \n";
         // Here you may define how you wish users to be authenticated for your Lumen
         // application. The callback which receives the incoming request instance
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
         Auth::viaRequest('api', function ($request) {
-            echo "- boot api \n";
             if ($request->input('api_token')) {
                 return User::where('api_token', $request->input('api_token'))->first(); // TODO if think that this function does not work
             }
