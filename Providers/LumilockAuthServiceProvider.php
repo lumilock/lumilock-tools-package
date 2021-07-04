@@ -1,18 +1,24 @@
 <?php
 
-namespace lumilock\lumilockToolsPackage\App\Providers;
+namespace lumilock\lumilockToolsPackage\Providers;
 
-use Closure;
+
 use Illuminate\Support\Facades\Auth;
 use lumilock\lumilockToolsPackage\App\Models\User;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use lumilock\lumilockToolsPackage\App\Auth\CheckTokenGuard;
 use lumilock\lumilockToolsPackage\App\Auth\CustomUserProvider;
-// use Illuminate\auth\AuthServiceProvider as ServiceProvider;
 
-class AuthServiceProvider extends ServiceProvider
+class LumilockAuthServiceProvider extends ServiceProvider
 {
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array
+     */
+    protected $policies = [
+      'App\Model' => 'App\Policies\ModelPolicy',
+    ];
     /**
      * Register any application services.
      *
@@ -20,22 +26,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->app['auth']->provider(
-        //     'auth-provider',
-        //     function ($app, array $config) {
-        //         echo "- register auth-provider \n";
-        //         return new CustomUserProvider($app['hash'], $config['model'], $app['session.store']);
-        //     }
-        // );
-
-        // $this->app['auth']->extend('GuardToken', function () {
-        //     echo "- register GuardToken \n";
-        //     $provider = $this->app['auth']->createUserProvider($this->app['config']['auth.guards.api']['provider']);
-        //     $guard = new CheckTokenGuard($provider, $this->app['session.store']);
-        //     return $guard;
-        // });
-
-
         $this->app->bind('lumilock\lumilockToolsPackage\App\Models\Auth\User', function ($app) {
             return new User($app->make());
         });
@@ -47,8 +37,8 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        Auth::extend('GuardToken', function ($app) {
-            $provider = Auth::createUserProvider($this->app['config']['auth.guards.api']['provider']);
+        Auth::extend('GuardToken', function ($app, $name, array $config) {
+            $provider = Auth::createUserProvider($config['provider']);
             $guard = new CheckTokenGuard($provider, $this->app['session.store']);
             return $guard;
         });
@@ -70,5 +60,14 @@ class AuthServiceProvider extends ServiceProvider
                 return User::where('api_token', $request->input('api_token'))->first(); // TODO if think that this function does not work
             }
         });
+    }
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+       return ['lumilockAuth'];
     }
 }

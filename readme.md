@@ -34,7 +34,7 @@ $app->middleware([
 ```php
  // Add these lines
 $app->register(lumilock\lumilockToolsPackage\Providers\LumilockToolsPackageServiceProvider::class);
-$app->register(lumilock\lumilockToolsPackage\Providers\AuthServiceProvider::class);
+$app->register(lumilock\lumilockToolsPackage\Providers\LumilockAuthServiceProvider::class);
 ```
 
 create the storage session directory : 
