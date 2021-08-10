@@ -158,7 +158,7 @@ class CheckTokenGuard implements Guard
         if ($user && isset($user->Error))
             return $user;
         // checking if we have the 'Unauthorized' error
-        if (!$user || $user === 'Unauthorized') {
+        if (!$user || $user === 'Unauthorized' || $user === 'Not Found') {
             return false;
         }
         // login of the user

@@ -75,6 +75,13 @@ $router->get('/permissions', function () {
             return App::call('lumilock\lumilockToolsPackage\App\Http\Controllers\PermissionsController@getPermissions', ['package' => $packageName]);
         });
 ```
+## .env
+```.env
+
+SSO_CHECK_URL=<Your/full/base/uri/with/api/auth/>
+
+# exemple : SSO_CHECK_URL=http://localhost:8001/api/auth/
+```
 
 ## 📰 Change log
 

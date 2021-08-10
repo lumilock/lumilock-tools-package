@@ -156,6 +156,9 @@ class CustomUserProvider implements UserProvider
             $response = $tokenManager->checkToken();
 
             // Check if there is an error
+            if (!$response) {
+                return $response;
+            }
             if ($response->getStatusCode() !== 200) {
                 return $response->getReasonPhrase();
             }
@@ -180,7 +183,7 @@ class CustomUserProvider implements UserProvider
     /**
      * The createUser method create or update an user
      */
-    protected function createUser($model, $body_resp)
+    protected function createUser($model_name, $body_resp)
     {
         // We get the user in db by it's id getting from the resquest
         $user = User::find($body_resp->user->id);
@@ -192,6 +195,7 @@ class CustomUserProvider implements UserProvider
             $stamp = $time->format('Y-m-d H:i'); // Format conversion
 
             // we create a new user
+            $model = app($model_name);
             $model->login = $body_resp->user->login;
             $model->first_name = $body_resp->user->first_name;
             $model->last_name = $body_resp->user->last_name;
