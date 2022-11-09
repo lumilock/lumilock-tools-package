@@ -1,5 +1,5 @@
 # Lumilock-tools-package
-
+## ⚠️ This repository is deprecated go to [lumilock-idp](https://github.com/lumilock/lumilock-idp) ⚠️
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Dev Version on Packagist][ico-version-dev]][link-packagist]
 
